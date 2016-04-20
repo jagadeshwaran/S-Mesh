@@ -10,6 +10,7 @@ SensorData = [ [1,2],["S1Val"],["S2Val"],["S3Val"],["S4Val"],["S5Val"] ]
 # sensor  - Type of sensor
 # data    - sensor data  
 #-----------------------------------------------------------#
+# datas from different sensors has not been taken care - which has to be fixed #
 def SensorValues(nodeId, sensor, data ):
 	SensorData[nodeId].append(data)
 
