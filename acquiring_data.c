@@ -34,7 +34,7 @@ def PushConfigurationToAllNodes(nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T)
 #S1T, S2T, S3T, S4T, S5T, S6T are sensors reporting timings						
 #--------------------------------------------------------#
 def PushConfigurationToSingleNode(nodeAddress, nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T):
-	comm.rpc( 1,"PushConfigurationToSingleNode", nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T)
+	comm.rpc("PushConfigurationToSingleNode", nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T)
 	
 def server_auth(realm, username):
 	"""
