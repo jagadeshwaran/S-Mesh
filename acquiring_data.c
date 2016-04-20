@@ -30,6 +30,7 @@ def PushConfigurationToAllNodes(nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T)
 						# 001000 - Enables sensor 4
 						# 010000 - Enables sensor 5
 						# 100000 - Enables sensor 6
+						# 111111 - Enables all the 6 sensors
 #S1T, S2T, S3T, S4T, S5T, S6T are sensors reporting timings						
 #--------------------------------------------------------#
 def PushConfigurationToSingleNode(nodeAddress, nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T):
