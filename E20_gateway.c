@@ -1,21 +1,44 @@
 
 from snapconnect import snap
+import sqlite3 # for database
+
 global comm
 comm = snap.Snap(funcs=rpcFuncs)
 # ist of Datas
 SensorData = [ [1,2],["S1Val"],["S2Val"],["S3Val"],["S4Val"],["S5Val"] ]
 
 #------------------------------------------------------------#
+# SensorDatas: database holds the all sensor datas 
+#-----------------------------------------------------------#
+def sqliteDatabase(nodeId, S1T, S2T, S3T, S4T, S5T, S6T):
+	conn = sqlite3.connect('SensorDatas.db') # ***** should happen only once
+	c = conn.cursor() # create a cursor
+	# ****time stamp of the datas collected with dates has to be added 
+	c.execute('create table SensorDatas(nodeAddress integer, sensor1 integer, sensor2 integer, sensor3 integer, sensor4 integer, sensor5 integer, sensor6 integer)')
+	# Datas can be on the same table it need not be organized, since data can be read based on time and recents with search 
+	c.execute("insert into SensorDatas values(?, ?, ?, ?, ?, ?, ?)",(nodeId, S1T, S2T, S3T, S4T, S5T, S6T))
+	
+#------------------------------------------------------------#
 # node    - Identity of the node, can be said as an address
 # sensor  - Type of sensor
 # data    - sensor data  
 #-----------------------------------------------------------#
-# datas from different sensors has not been taken care - which has to be fixed #
+# ***** datas from different sensors has not been taken care - which has to be fixed #
 def SensorValues(nodeId, sensor, data ):
 	SensorData[nodeId].append(data)
 
 #--------------------------------------------------------#
 # Need for fn: when all the nodes have to work with same configuration
+# nodeId    - A unique address
+# sensorCfg    - I binary multiples Transmitted say 1
+						# 000001 - Enables sensor 1
+						# 000010 - Enables sensor 2
+						# 000100 - Enables sensor 3
+						# 001000 - Enables sensor 4
+						# 010000 - Enables sensor 5
+						# 100000 - Enables sensor 6
+						# 111111 - Enables all the 6 sensors
+#S1T, S2T, S3T, S4T, S5T, S6T are sensors reporting timings	
 #--------------------------------------------------------#
 def PushConfigurationToAllNodes(nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T):
 	comm.mcast_rpc( 1, 2, "PushConfigurationToAllNodes", nodeId, sensorCfg, S1T, S2T, S3T, S4T, S5T, S6T) #mcast the configuration data
