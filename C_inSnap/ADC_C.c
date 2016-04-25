@@ -59,8 +59,7 @@ void ReadADCdatachunks(uint8_t *s, int16_t count)
     int16_t i;
     for(i = 0; i < count; i++)
     {
-        char s =AnalogValues[0][i];
-        s[i] =  s;
+        s[i] =  's';
     }
 SET_STR_LEN(s, count);
 }
