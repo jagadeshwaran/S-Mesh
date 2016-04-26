@@ -6,7 +6,9 @@
 #define REFERENCE_VOLTAGE       ((1 << REFS1) | (1 << REFS0))
 
 //split into 31 parts
-static int16_t  AnalogValues[6][500];
+static int16_t  AnalogValues[8][130];
+static int16_t  AnalogValuesOneSample[8];
+static int16_t  counter[8];
 
 int16_t take_sample()
 {
@@ -42,24 +44,53 @@ void enable_adc_and_set_channel(int16_t channel)
 
 int16_t take_averaged_sample(int16_t channel)
 {
+    #define NUM_SAMPLES_PER_AVERAGE1 20
+	int16_t sum = 0;
+	enable_adc_and_set_channel(channel);
+	
+	for ( int i = 0; i < NUM_SAMPLES_PER_AVERAGE1; ++i )
+	{
+		 sum += take_sample();
+	}
+	AnalogValues[channel][counter[channel]] = sum;
+	counter[channel]++;
+	if (counter[channel]==500)
+	{
+		counter[channel]=0;
+	}
+	return sum; // NUM_SAMPLES_PER_AVERAGE;
+}
+
+void take_averaged_sample_all_channels(int16_t channel)
+{
     #define NUM_SAMPLES_PER_AVERAGE 20
-    int16_t sum = 0;
-    
-    enable_adc_and_set_channel(channel);
-    
-    for ( int i = 0; i < NUM_SAMPLES_PER_AVERAGE; ++i )
-    {
-        sum += take_sample();
-    }
-    return sum; // NUM_SAMPLES_PER_AVERAGE;
+	for(int j=0; j<8; j++)
+	{
+		int16_t sum = 0;
+		enable_adc_and_set_channel(j);
+		
+		for ( int l = 0; l < NUM_SAMPLES_PER_AVERAGE; ++l )
+		{
+			 sum += take_sample();
+		}
+		
+		AnalogValuesOneSample[j] = sum;
+	}
+	
+	//return AnalogValuesOneSample; // NUM_SAMPLES_PER_AVERAGE;
+}
+
+int16_t GetValues(int16_t channel, int16_t sampleNo)
+{
+	return AnalogValues[channel][sampleNo];
 }
 
 void ReadADCdatachunks(uint8_t *s, int16_t count)
 {
-    int16_t i;
-    for(i = 0; i < count; i++)
+    int16_t k;
+    for(k = 0; k < count; k++)
     {
-        s[i] =  's';
+        s[k] =  's';
     }
 SET_STR_LEN(s, count);
 }

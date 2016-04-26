@@ -4,21 +4,16 @@ import_c("ADC_C.c")
 def take_averaged_sample(channel):
     pass
 
-###########################################################################
-# fill_data1
-# This function potentially changes the length of the passed string, so
-# there is risk of overflowing the string buffer.
-###########################################################################
+@c_function(api=["none", "int"])
+def take_averaged_sample_all_channels(samples):
+    pass
+
+@c_function(api=["int","int", "int"])
+def GetValues(channel,sampleNo):
+    pass
+
 @c_function(api=["none", "str", "int"])
 def ReadADCdatachunks(s, count):
-    '''
-    Take a string s and fill make it length count, with 'w' at each character.
-    This function returns None.
-    Note: This is potentially dangerous. If you pass a count value longer
-    than the string buffer in use for the passed string, you can overflow
-    into other data in RAM.
-    '''
-    # Associated C code in wrap_test.c as fill_data1
     pass
 
 def ReadADCdatachunks1(data):
