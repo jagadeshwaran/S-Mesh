@@ -4,11 +4,25 @@
 #include "snappy.h"
 
 #define REFERENCE_VOLTAGE       ((1 << REFS1) | (1 << REFS0))
+#define numberOfChannels 8
 
-//split into 31 parts
 static int16_t  AnalogValues[8][130];
 static int16_t  AnalogValuesOneSample[8];
-static int16_t  counter[8];
+//static int16_t  counter[]={0,0,0,0,0,0,0,0};
+static int16_t  counter[numberOfChannels];
+
+void startup()
+{
+	for(int z=0;z<=8;z++)
+	{
+		counter[z] = 0;
+		AnalogValuesOneSample[z] = 0;
+		for(int k=0;k<=130;k++)
+		{
+			AnalogValues[z][k] = 0;
+		}
+	}
+}
 
 int16_t take_sample()
 {
@@ -53,12 +67,13 @@ int16_t take_averaged_sample(int16_t channel)
 		 sum += take_sample();
 	}
 	AnalogValues[channel][counter[channel]] = sum;
-	counter[channel]++;
-	if (counter[channel]==500)
+	counter[channel] = counter[channel] + 1;
+	if (counter[channel]==130)
 	{
 		counter[channel]=0;
 	}
 	return sum; // NUM_SAMPLES_PER_AVERAGE;
+	//return AnalogValues[channel][0]; // NUM_SAMPLES_PER_AVERAGE;
 }
 
 void take_averaged_sample_all_channels(int16_t channel)
@@ -66,21 +81,21 @@ void take_averaged_sample_all_channels(int16_t channel)
     #define NUM_SAMPLES_PER_AVERAGE 20
 	for(int j=0; j<8; j++)
 	{
-		int16_t sum = 0;
+		int16_t sum1 = 0;
 		enable_adc_and_set_channel(j);
 		
 		for ( int l = 0; l < NUM_SAMPLES_PER_AVERAGE; ++l )
 		{
-			 sum += take_sample();
+			 sum1 += take_sample();
 		}
 		
-		AnalogValuesOneSample[j] = sum;
+		AnalogValuesOneSample[j] = sum1;
 	}
 	
 	//return AnalogValuesOneSample; // NUM_SAMPLES_PER_AVERAGE;
 }
 
-int16_t GetValues(int16_t channel, int16_t sampleNo)
+int16_t GetADCSanmpledValues(int16_t channel, int16_t sampleNo)
 {
 	return AnalogValues[channel][sampleNo];
 }
