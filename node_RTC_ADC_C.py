@@ -353,10 +353,23 @@ def ReportingPeriod(H,M,S):
     return M
 
 def ImGateway(x):
-	addr0 = GetLocalAddr()
-	#y = str(x)
-	# Unicast would be good to do here, In that case Im gateway should carry the E20 Address
-	# Use mcast --- unicast will be much useful when there is a single hop for a 6 or more node surrounded and after that 1 node
-	mcastRpc(1,4,"MeshNodes",addr0)
-	
+    addr0 = GetLocalAddr()
+    yy = GenerateRandomNumber()
+    sleepForTime(0,yy)
+    #y = str(x)
+    # Unicast would be good to do here, In that case Im gateway should carry the E20 Address
+    # Use mcast --- unicast will be much useful when there is a single hop for a 6 or more node surrounded and after that 1 node
+    mcastRpc(1,4,"MeshNodes",addr0)
+    
+def GenerateRandomNumber():
+    ff = random()%16
+    return ff
+
+# Two modes 0 and 1 for XX
+# mode 0 introduces 1.024 seconds delay per "e" and 30% inacuurate 
+# mode 1 introduces more accurate 1sec delay per "e" and consumes less power
+def sleepForTime(xx,e):    
+    sleep(xx,e)
+
+
 
